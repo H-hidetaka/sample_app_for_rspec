@@ -53,5 +53,21 @@ RSpec.describe "Tasks", type: :system do
   end
 
   describe 'ログイン後' do
+    before { login_as(user) }
 
+    describe 'タスク新規登録' do
+      context 'フォームの入力値が正常' do
+        it 'タスクの新規作成が成功する' do
+          visit new_task_path
+          fill_in 'Title', with: 'test_title'
+          fill_in 'Content', with: 'test_content'
+          select 'doing' , with: DateTime.new(2020, 6, 1, 10, 30)
+          click_button 'Create Task'
+          expect(page).to have_content 'Title: test_title'
+          expect(page).to have_content 'Content: test_content'
+
+          expect(page).to have_content 'Deadline: 2020/6/1 10:30'
+
+        end
+    end
   end
