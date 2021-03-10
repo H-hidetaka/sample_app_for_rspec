@@ -40,13 +40,18 @@ RSpec.describe "Tasks", type: :system do
       end
 
       context 'タスクの一覧ページにアクセス' do
-        it '全てのユーザーのタスク情報が表示される' do
+        it 'すべてのユーザーのタスク情報が表示される' do
           task_list = create_list(:task, 3)
           visit tasks_path
-          expect(page).to
+          expect(page).to have_content task_list[0].title
+          expect(page).to have_content task_list[1].title
+          expect(page).to have_content task_list[2].title
+          expect(current_path).to eq tasks_path
         end
       end
+    end
+  end
 
+  describe 'ログイン後' do
 
-
-      end
+  end
