@@ -32,6 +32,12 @@ RSpec.describe 'Users', type: :system do
 
       context '登録済のメールアドレスを使用' do
         it 'ユーザーの新規作成が失敗する'
+          existed_user = create(:user)
+          visit new_user_path
+          fill_in 'Email', with: existed_user.email
+          fill_in 'Password', with: 'password'
+          fill_in 'Password', with: "password"
+
       end
     end
 
