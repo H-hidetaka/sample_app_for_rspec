@@ -102,15 +102,22 @@ describe 'ログイン後' do
 
     context '他ユーザーの編集ページにアクセス' do
       it '編集ページへのアクセスが失敗する'
-
-    end
-  end
-end
-
-    describe 'マイページ' do
-      context 'タスクを作成' do
-        it '新規作成したタスクが表示される'
+        other_user = create(:user)
+        visit edit_user_path(other_user)
+        expect(page).to have_content 'Forbidden access.'
+        expect(current_path).to eq user_path(user)
       end
     end
+  end
+
+  describe 'マイページ' do
+    context 'タスクを作成' do
+      it '新規作成したタスクが表示される'
+        create
+        visit
+        expect
+        ex
+    end
+  end
   end
 end
