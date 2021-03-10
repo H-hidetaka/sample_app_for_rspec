@@ -36,25 +36,51 @@ RSpec.describe 'Users', type: :system do
           visit new_user_path
           fill_in 'Email', with: existed_user.email
           fill_in 'Password', with: 'password'
-          fill_in 'Password', with: "password"
-
-      end
-    end
-
-    describe 'マイページ' do
-      context 'ログインしていない状態' do
-        it 'マイページへのアクセスが失敗する'
+          fill_in 'Password confirmation', with: "password"
+          click_button 'SignUp'
+          expect(page).to have_content '1 error prohibited this user from being saved'
+          expect(page).to have_content "Email has already been taken"
+          expect(current_path).to eq users_path
+          expect(page).to have_field 'Email', with: existed_user.email
       end
     end
   end
 
-  describe 'ログイン後' do
-    describe 'ユーザー編集' do
-      context 'フォームの入力値が正常' do
-        it 'ユーザーの編集が成功する'
+    describe 'マイページ' do
+      context 'ログインしていない状態' do
+        it 'マイページへのアクセスが失敗する'
+          visit user_path(user)
+          expect(page).to have_content('login required')
+          expect(current_path).to eq login_path
       end
-      context 'メールアドレスが未入力' do
+    end
+  end
+end
+
+describe 'ログイン後' do
+  before { login_as(user) }
+
+  describe 'ユーザー編集' do
+    context 'フォームの入力値が正常' do
+      it 'ユーザーの編集が成功する'
+      visit edit_user_path(user)
+      fill_in 'Email', with: 'update@example.com'
+      fill_in 'Password', with: 'update_password'
+      fill_in 'Password confirmation', with: 'update_password'
+      click_button 'Update'
+      expect(page).to have_content('User was successfully updated.')
+      expect(current_path).to eq user_path(user)
+    end
+  end
+
+  context 'メールアドレスが未入力' do
         it 'ユーザーの編集が失敗する'
+        visit edit_user_path(user)
+        fill_in 'Password', with: 'password'
+        fill_in 'Password confirmation', with: 'password'
+        click_button 'Update'
+        expect(page).to have_content('1 error prohibited this user from being saved')
+        expect(page).to
       end
       context '登録済のメールアドレスを使用' do
         it 'ユーザーの編集が失敗する'
