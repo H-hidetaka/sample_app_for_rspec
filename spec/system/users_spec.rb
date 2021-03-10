@@ -76,19 +76,36 @@ describe 'ログイン後' do
   context 'メールアドレスが未入力' do
         it 'ユーザーの編集が失敗する'
         visit edit_user_path(user)
+        fill_in 'Email', with: ''
         fill_in 'Password', with: 'password'
         fill_in 'Password confirmation', with: 'password'
         click_button 'Update'
         expect(page).to have_content('1 error prohibited this user from being saved')
-        expect(page).to
-      end
-      context '登録済のメールアドレスを使用' do
-        it 'ユーザーの編集が失敗する'
-      end
-      context '他ユーザーの編集ページにアクセス' do
-        it '編集ページへのアクセスが失敗する'
+        expect(page).to have_content("Email can't be blank")
+        expect(current_path).to eq user_path(user)
       end
     end
+
+    context '登録済のメールアドレスを使用' do
+      it 'ユーザーの編集が失敗する' do
+        visit edit_user_path(user)
+        other_user = create(:user)
+        fill_in 'Email', with: other_user.email
+        fill_in 'Password', with: 'password'
+        fill_in 'Password confirmation', with: 'password'
+        click_button 'Update'
+        expect(page).to have_content('1 error prohibited this user from being saved')
+        expect(page).to have_content('Email has already been taken')
+        expect(current_path).to eq user_path(user)
+      end
+    end
+
+    context '他ユーザーの編集ページにアクセス' do
+      it '編集ページへのアクセスが失敗する'
+
+    end
+  end
+end
 
     describe 'マイページ' do
       context 'タスクを作成' do
