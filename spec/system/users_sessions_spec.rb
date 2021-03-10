@@ -18,14 +18,21 @@ RSpec.describe 'UserSessions', type: :system do
     context 'フォームが未入力' do
       it 'ログイン処理が失敗する' do
         visit login_path
-        fill_in 'Email', with: user.email
+        fill_in 'Email', with: ''
         fill_in 'Password', with: 'password'
+        expect(page).to have_content 'Login failed'
+        expect(current_path).to eq login_path
+      end
     end
   end
 
   describe 'ログイン後' do
     context 'ログアウトボタンをクリック' do
       it 'ログアウト処理が成功する'
+        login_as(user)
+        click_link 'Logout'
+        expect(page).to have_content 'Logged out'
+        expect(current_path).to eq root_path
     end
   end
 end
