@@ -12,6 +12,10 @@ gem 'coffee-rails', '~> 4.2'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'sorcery'
 
+group :test do
+  gem 'capybara'
+  gem 'webdrivers'
+end
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
