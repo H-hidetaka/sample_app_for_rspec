@@ -23,16 +23,8 @@ RSpec.describe "Tasks", type: :system do
         end
       end
 
-      context 'タスクの編集ページにアクセス'　do
-        it '編集ページへのアクセスが失敗する'　do
-          visit edit_task_path(task)
-          expect(page).to have_content('Login required')
-          expect(current_path).to eq login_path
-        end
-      end
-
       context 'タスクの詳細ページにアクセス' do
-        it 'タスクの詳細情報が表示される'
+        it 'タスクの詳細情報が表示される' do
           visit task_path(task)
           expect(page).to have_content task.title
           expect(current_path).to eq task_path(task)
@@ -71,7 +63,7 @@ RSpec.describe "Tasks", type: :system do
         end
       end
 
-      content 'タイトルが見入力' do
+      context 'タイトルが見入力' do
         it 'タスクの新規作成が失敗する' do
           visit new_task_path
           fill_in 'Title', with: ''
@@ -83,7 +75,7 @@ RSpec.describe "Tasks", type: :system do
         end
       end
 
-      content '登録済のタイトルを入力'　do
+      context '登録済のタイトルを入力' do
         it 'タスクの新規作成が失敗する' do
           visit new_task_path
           other_task = create(:task)
@@ -97,9 +89,9 @@ RSpec.describe "Tasks", type: :system do
       end
     end
 
-    describe 'タスク編集'　do
+    describe 'タスク編集' do
       let!(:task) { create(:task, user: user) }
-      let!(:other_task){ create(:task, user: user)}
+      let(:other_task){ create(:task, user: user)}
       before { visit edit_task_path(task) }
 
       context 'フォームの入力値が異常' do
@@ -115,7 +107,7 @@ RSpec.describe "Tasks", type: :system do
       end
 
       context 'タイトルが未入力' do
-        it 'タスクの編集が失敗する'　do
+        it 'タスクの編集が失敗する' do
           fill_in 'Title', with: 'nil'
           select :todo, from: 'Status'
           click_button 'Update Task'
